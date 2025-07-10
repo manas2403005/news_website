@@ -47,6 +47,3 @@ This project simulates user authentication using browser `localStorage`. No real
 - When logged in, "Register / Sign In" are hidden and "Your Account" is shown
 - Clicking "Your Account" allows logout with confirmation
 
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
