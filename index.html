@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Today Times</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Roboto&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="nyt-header">
+    <div class="nyt-topbar">
+      <div class="nyt-left">
+        <span class="nyt-date">Thursday, July 10, 2025</span>
+        <a href="#" class="nyt-paper">Today’s Paper</a>
+      </div>
+      <div class="nyt-center">
+        <span class="nyt-edition top-category" data-category="US">U.S.</span>
+        <span class="nyt-edition top-category" data-category="India">India</span>
+        <span class="nyt-edition top-category" data-category="World">World</span>
+        <span class="nyt-edition top-category" data-category="Other">Other</span>
+      </div>
+      <div id="auth-buttons" class="nyt-right">
+        <a href="register.html" class="nyt-btn login">Register</a>
+        <a href="login.html" class="nyt-btn login">Sign In</a>
+      </div>
+      <div id="account-button" class="nyt-right" style="display: none;">
+        <a href="#" class="nyt-btn login" id="account-link">Your Account</a>
+      </div>
+    </div>
+
+    <div class="nyt-logo-section">
+      <h1 class="nyt-logo">TODAY TIMES</h1>
+    </div>
+
+    <nav class="nyt-nav">
+      <ul class="nyt-nav-list">
+        <li><a href="#" class="nyt-nav-item" data-category="US">U.S.</a></li>
+        <li><a href="#" class="nyt-nav-item" data-category="World">World</a></li>
+        <li><a href="#" class="nyt-nav-item" data-category="Business">Business</a></li>
+        <li><a href="#" class="nyt-nav-item" data-category="Arts">Arts</a></li>
+        <li><a href="#" class="nyt-nav-item" data-category="Lifestyle">Lifestyle</a></li>
+        <li><a href="#" class="nyt-nav-item" data-category="Opinion">Opinion</a></li>
+        <li><a href="#" class="nyt-nav-item" data-category="Audio">Audio</a></li>
+        <li><a href="#" class="nyt-nav-item" data-category="Games">Games</a></li>
+        <li><a href="#" class="nyt-nav-item" data-category="Cooking">Cooking</a></li>
+        <li><a href="#" class="nyt-nav-item" data-category="Wirecutter">Wirecutter</a></li>
+        <li><a href="#" class="nyt-nav-item" data-category="The Athletic">The Athletic</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="hero-section"></section>
+
+    <div class="search-bar">
+      <input id="search-text" type="text" placeholder="Search for news..." />
+      <button id="search-button">Search</button>
+    </div>
+
+    <section class="cards-area">
+      <div id="cards-container" class="cards-container"></div>
+      <aside class="sidebar">
+        <h3>Latest Headlines</h3>
+        <ul id="latest-list"></ul>
+      </aside>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    // Category click handling
+    document.querySelectorAll('[data-category]').forEach((item) => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = item.getAttribute('data-category');
+        localStorage.setItem('lastCategory', category);
+        fetchNews(category);
+
+        document.querySelectorAll('[data-category]').forEach((el) => el.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+
+    // Authentication buttons logic
+    const authButtons = document.getElementById('auth-buttons');
+    const accountButton = document.getElementById('account-button');
+    const accountLink = document.getElementById('account-link');
+
+    if (localStorage.getItem('loggedIn') === 'true') {
+      authButtons.style.display = 'none';
+      accountButton.style.display = 'flex';
+
+      accountLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const confirmed = confirm('Do you want to log out?');
+        if (confirmed) {
+          localStorage.removeItem('loggedIn');
+          alert('Logged out successfully!');
+          window.location.reload();
+        }
+      });
+    }
+
+    // Load news on page load with last saved category
+    window.addEventListener('load', () => {
+      const savedCategory = localStorage.getItem('lastCategory') || 'India';
+      fetchNews(savedCategory);
+
+      // Mark saved category active (if exists)
+      const savedCategoryEl = document.querySelector(`[data-category="${savedCategory}"]`);
+      if (savedCategoryEl) {
+        document.querySelectorAll('[data-category]').forEach((el) => el.classList.remove('active'));
+        savedCategoryEl.classList.add('active');
+      }
+    });
+  </script>
+</body>
+
+</html>
